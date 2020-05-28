@@ -1,5 +1,9 @@
 Documentation:
   Enabled: false
+Style/ClassAndModuleChildren:
+  Enabled: false
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
 AllCops:
   Exclude:
     - config/**/*
@@ -45,3 +49,6 @@ Style/BlockComments:
   Exclude:
     - spec/spec_helper.rb
     - spec/rails_helper.rb
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*
