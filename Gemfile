@@ -19,6 +19,7 @@ gem 'puma', '~> 4.1'
 # gem 'image_processing', '~> 1.2'
 
 gem 'rubocop'
+gem 'active_model_serializers', '~> 0.10.0'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
@@ -31,6 +32,8 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'rspec-rails', '~> 4.0.0'
   gem 'pry'
+  gem 'factory_bot_rails'
+  gem 'ffaker'
 end
 
 group :development do

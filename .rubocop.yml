@@ -36,8 +36,7 @@ Layout/EmptyLinesAroundBlockBody:
     - db/schema.rb
 Style/StringLiterals:
   Exclude:
-    - spec/spec_helper.rb
-    - spec/rails_helper.rb
+    - spec/**/*
     - db/schema.rb
 Style/NumericLiterals:
   Exclude:
