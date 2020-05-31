@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe ProjectSerializer, type: :serializer do
   describe "attributes" do
     let(:project) { create(:project_with_tasks) }
-    let(:tasks) { project.tasks }
+    let(:tasks) { project.reload.tasks }
 
     it "should include the last task's estimate date as an attribute" do
       serialized = serialize(project)

@@ -4,7 +4,7 @@ RSpec.describe TaskSerializer, type: :serializer do
   describe "attributes" do
     let(:task) { Task.first }
 
-    before(:all) { create(:project_with_tasks) }
+    before(:each) { create(:project_with_tasks) }
 
     it "should have the list of attributes" do
       tasks_attributes = %i[uuid name description estimate_date price status progress project]

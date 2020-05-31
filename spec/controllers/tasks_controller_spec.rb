@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe TasksController, type: :controller do
-  describe 'ProjectsController' do
+  describe 'TasksController' do
     describe "GET #index" do
       let(:tasks) { Task.all }
       subject { get :index }
