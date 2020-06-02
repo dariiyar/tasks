@@ -21,7 +21,7 @@ RSpec.describe Project::Create do
         allow(project_double).to receive(:save).and_return(false)
         allow(project_double).to receive(:errors).and_return('errors')
       end
-      it 'without a name' do
+      it 'returns errors' do
         expect(result.errors).to eq('errors')
         expect(result.project).to be_nil
         expect(result.success?).to be_falsey
