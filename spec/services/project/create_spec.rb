@@ -2,31 +2,29 @@ require 'rails_helper'
 
 RSpec.describe Project::Create do
   describe '#perform' do
-    let(:name) { FFaker::Lorem.word.upcase }
-    let(:price) { rand(100.2...1000.9).round(2) }
-    let!(:project) { build :project, name: name, price: price }
-    subject { described_class.perform(project) }
+    let(:project_double) { instance_double('Project') }
+    let(:result) { subject.perform(project_double) }
+    subject { described_class }
 
     context 'when project is valid' do
-      it 'saves and returns node' do
-        expect(subject.project.id).to be_present
-        expect(subject.project.name).to eq(project.name)
-        expect(subject.project.description).to eq(project.description)
-        expect(subject.success?).to be_truthy
+      before do
+        allow(project_double).to receive(:save).and_return(true)
+      end
+      it 'saves and returns project' do
+        expect(result.project).to be_equal(project_double)
+        expect(result.success?).to be_truthy
       end
     end
 
     context 'when project isn`t valid' do
-      it 'without a name' do
-        project.name = nil
-        expect(subject.success?).to be_falsey
-        expect(subject.errors).not_to be_empty
+      before do
+        allow(project_double).to receive(:save).and_return(false)
+        allow(project_double).to receive(:errors).and_return('errors')
       end
-
-      it 'without a price' do
-        project.price = nil
-        expect(subject.success?).to be_falsey
-        expect(subject.errors).not_to be_empty
+      it 'without a name' do
+        expect(result.errors).to eq('errors')
+        expect(result.project).to be_nil
+        expect(result.success?).to be_falsey
       end
     end
   end
