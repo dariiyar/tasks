@@ -9,9 +9,7 @@ RSpec.describe Task::BatchCreate do
 
     context 'when all tasks in the batch are valid' do
       it 'saves and returns array of tasks' do
-        errors = double
-        allow(errors).to receive(:empty?).and_return(true)
-        subject.instance_variable_set(:@errors, errors)
+        subject.instance_variable_set(:@valid, true)
         expect(result.success?).to be_truthy
         expect(result.tasks).not_to be_nil
       end
@@ -19,9 +17,7 @@ RSpec.describe Task::BatchCreate do
 
     context 'when tasks in the batch are not valid' do
       it 'returns errors' do
-        errors = double
-        allow(errors).to receive(:empty?).and_return(false)
-        subject.instance_variable_set(:@errors, errors)
+        subject.instance_variable_set(:@valid, false)
         expect(result.success?).to be_falsey
         expect(result.tasks).to be_nil
       end

@@ -4,7 +4,11 @@ Rails.application.routes.draw do
   root 'application#render_404'
   resources :projects, only: [:index, :create]
 
-  resources :tasks, only: [:index]
+  resources :tasks, only: [:index] do
+    collection do
+      post :batch_create
+    end
+  end
 
   get "*any", via: :all, to: 'application#render_404'
 end

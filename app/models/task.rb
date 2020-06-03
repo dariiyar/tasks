@@ -2,6 +2,7 @@ class Task < ApplicationRecord
   belongs_to :project
 
   validates :name, presence: true
+  validates :price, numericality: { greater_than_or_equal_to: 0 }
   validates :progress, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
   validate :estimate_date_in_the_future, :tasks_price_cannot_be_bigger_than_project_price, :urls_presence
 

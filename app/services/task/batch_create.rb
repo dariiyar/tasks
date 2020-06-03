@@ -6,6 +6,7 @@ class Task::BatchCreate
   def initialize(tasks_params)
     @tasks = []
     @errors = []
+    @valid = true
     tasks_params.each do |task_param|
       @tasks << Task.new(task_param)
     end
@@ -13,7 +14,7 @@ class Task::BatchCreate
 
   def perform
     check_valid
-    if @errors.empty?
+    if @valid
       @tasks.each(&:save)
       OpenStruct.new(success?: true, tasks: @tasks)
     else
@@ -24,6 +25,13 @@ class Task::BatchCreate
   private
 
   def check_valid
-    @tasks.each { |t| @errors << t.errors unless t.valid? }
+    @tasks.each do |t|
+      if t.valid?
+        @errors << {}
+      else
+        @errors << t.errors
+        @valid = false
+      end
+    end
   end
 end
