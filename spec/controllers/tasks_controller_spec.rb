@@ -16,8 +16,8 @@ RSpec.describe TasksController, type: :controller do
     end
     describe "POST #batch_create" do
       let(:project) { create(:project) }
-      let(:result_double) { double('result_double')}
-      subject { post :batch_create, params:  {} }
+      let(:result_double) { double('result_double') }
+      subject { post :batch_create, params: {} }
 
       context "Batch create is successful" do
         it 'it responses with status 201' do

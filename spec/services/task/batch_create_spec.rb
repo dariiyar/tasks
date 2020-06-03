@@ -3,7 +3,9 @@ require 'rails_helper'
 RSpec.describe Task::BatchCreate do
   describe '#perform' do
     let(:project) { create(:project) }
-    let(:tasks_params) { FactoryBot.attributes_for_list(:task,2, project_id: project.id, price:0, estimate_date: nil) }
+    let(:tasks_params) do
+      FactoryBot.attributes_for_list(:task, 2, project_id: project.id, price: 0, estimate_date: nil)
+    end
     let(:result) { subject.perform }
     subject { described_class.new(tasks_params) }
 

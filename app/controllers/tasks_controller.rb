@@ -12,22 +12,12 @@ class TasksController < ApplicationController
     end
   end
 
-
   private
 
   def tasks_params
     params.permit(
-        tasks: [
-            :name,
-            :description,
-            :price,
-            :estimate_date,
-            :urls,
-            :status,
-            :progress,
-            :project_id,
-            urls: []
-        ]
+      tasks:
+        [:name, :description, :price, :estimate_date, :urls, :status, :progress, :project_id, urls: []]
     )
   end
 end
