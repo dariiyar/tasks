@@ -14,6 +14,7 @@ RSpec.describe Task::BatchCreate do
         subject.instance_variable_set(:@valid, true)
         expect(result.success?).to be_truthy
         expect(result.tasks).not_to be_nil
+        expect(result.tasks.sample.reload.status).to eq('initialized')
       end
     end
 

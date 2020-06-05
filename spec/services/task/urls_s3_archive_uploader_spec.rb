@@ -16,8 +16,10 @@ RSpec.describe Task::UrlsS3ArchiveUploader do
         expect(File::Downloader).to receive(:perform)
         expect(File::Archiver).to receive(:perform)
         expect(File::AwsS3Uploader).to receive(:perform)
+        expect_any_instance_of(Task).to receive(:processing!)
         expect(result.success?).to be_truthy
         expect(result.errors).to be_nil
+        expect(task.reload.status).to eq('finished')
       end
     end
 
@@ -27,9 +29,9 @@ RSpec.describe Task::UrlsS3ArchiveUploader do
 
         expect(File::Archiver).not_to receive(:perform)
         expect(File::AwsS3Uploader).not_to receive(:perform)
-
         expect(result.success?).to be_falsey
         expect(result.errors).not_to be_nil
+        expect(task.reload.status).to eq('failed')
       end
     end
 
@@ -52,6 +54,7 @@ RSpec.describe Task::UrlsS3ArchiveUploader do
 
         expect(result.success?).to be_falsey
         expect(result.errors).not_to be_nil
+        expect(task.reload.status).to eq('failed')
       end
     end
   end

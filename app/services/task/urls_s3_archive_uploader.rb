@@ -16,13 +16,15 @@ class Task::UrlsS3ArchiveUploader
     rescue StandardError => e
       @errors << "Task: #{@task.id} - #{e.class} => #{e.message}"
     end
-    return OpenStruct.new(success?: true) if @errors.empty?
-    OpenStruct.new(success?: false, errors: @errors)
+    @result = @errors.empty? ? OpenStruct.new(success?: true) : OpenStruct.new(success?: false, errors: @errors)
+    update_task
+    @result
   end
 
   private
 
   def create_archive
+    @task.processing!
     @task.urls.each do |url|
       downloader = File::Downloader.perform(url)
       if downloader.success?
@@ -37,5 +39,9 @@ class Task::UrlsS3ArchiveUploader
   def upload_archive
     uploader = File::AwsS3Uploader.perform(ENV['AWS_TASKS_BUCKET'], @archive, "urls_#{@task.id}.zip")
     @errors << uploader.error unless uploader.success?
+  end
+
+  def update_task
+    @result.success? ? @task.finished! : @task.failed!
   end
 end

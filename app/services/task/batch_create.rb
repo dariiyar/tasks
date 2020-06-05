@@ -14,15 +14,19 @@ class Task::BatchCreate
 
   def perform
     check_valid
-    if @valid
-      @tasks.each(&:save)
-      OpenStruct.new(success?: true, tasks: @tasks)
-    else
-      OpenStruct.new(success?: false, tasks: nil, errors: @errors)
-    end
+    save_tasks if @valid
+    return OpenStruct.new(success?: true, tasks: @tasks) if @valid
+    OpenStruct.new(success?: false, tasks: nil, errors: @errors)
   end
 
   private
+
+  def save_tasks
+    @tasks.each do |task|
+      task.initialized!
+      task.save
+    end
+  end
 
   def check_valid
     @tasks.each do |t|
