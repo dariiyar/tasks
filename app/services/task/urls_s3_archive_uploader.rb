@@ -11,28 +11,30 @@ class Task::UrlsS3ArchiveUploader
 
   def perform
     begin
-      create_archive
-      upload_archive if @errors.empty?
+      upload_archive if create_archive
     rescue StandardError => e
       @errors << "Task: #{@task.id} - #{e.class} => #{e.message}"
     end
-    @result = @errors.empty? ? OpenStruct.new(success?: true) : OpenStruct.new(success?: false, errors: @errors)
-    update_task
-    @result
+    result = @errors.present? ? OpenStruct.new(success?: false, errors: @errors) : OpenStruct.new(success?: true)
+    update_task(result)
+    result
   end
 
   private
 
   def create_archive
     @task.processing!
-    @task.urls.each do |url|
-      downloader = File::Downloader.perform(url)
-      if downloader.success?
-        archiver = File::Archiver.perform(downloader.file, @archive)
-        archiver.success? ? @archive = archiver.archive : @errors << archiver.error
-      else
-        @errors << downloader.error
-      end
+    @task.urls.each { |url| download_file(url) }
+    @errors.empty?
+  end
+
+  def download_file(url)
+    downloader = File::Downloader.perform(url)
+    if downloader.success?
+      archiver = File::Archiver.perform(downloader.file, @archive)
+      archiver.success? ? @archive = archiver.archive : @errors << archiver.error
+    else
+      @errors << downloader.error
     end
   end
 
@@ -41,7 +43,7 @@ class Task::UrlsS3ArchiveUploader
     @errors << uploader.error unless uploader.success?
   end
 
-  def update_task
-    @result.success? ? @task.finished! : @task.failed!
+  def update_task(result)
+    result.success? ? @task.finished! : @task.failed!
   end
 end

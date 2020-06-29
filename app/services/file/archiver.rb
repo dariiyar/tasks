@@ -12,36 +12,39 @@ class File::Archiver
     begin
       @archive.present? ? add_to_existing : create_new
     rescue StandardError => e
-      @error = "File::Archiver #{File.basename(@file.path) unless @file.nil?} - #{e.class} => #{e.message}"
+      error = "File::Archiver #{File.basename('' || @file&.path)} - #{e.class} => #{e.message}"
+      return OpenStruct.new(success?: false, error: error)
     end
-    return OpenStruct.new(success?: true, archive: @archive) if @error.nil?
-    OpenStruct.new(success?: false, error: @error)
+    OpenStruct.new(success?: true, archive: @archive)
   end
 
   private
 
   def create_new
+    path = @file.path
     @archive = Tempfile.new("#{SecureRandom.hex}.zip")
     ::Zip::OutputStream.open(@archive) { |zos| }
     ::Zip::File.open(@archive.path, Zip::File::CREATE) do |zip|
-      zip.add(File.basename(@file.path), @file.path)
+      zip.add(File.basename(path), path)
     end
   end
 
   def add_to_existing
     new_name = check_duplicate_name
+    path = @file.path
     ::Zip::File.open(@archive.path, Zip::File::CREATE) do |zip|
-      new_name ||= File.basename(@file.path)
-      zip.add(new_name, @file.path)
+      new_name ||= File.basename(path)
+      zip.add(new_name, path)
     end
   end
 
   def check_duplicate_name
     is_valid = true
-    name = File.basename(@file.path)
-    extension = File.extname(@file.path)
-    ::Zip::File.foreach(@archive.path) { |f| is_valid = f.name != name }
+    path = @file.path
+    name = File.basename(path)
+    extension = File.extname(path)
+    ::Zip::File.foreach(@archive.path) { |file| is_valid = file.name != name }
     return if is_valid
-    File.basename(@file.path, extension) + '_' + SecureRandom.hex(6) + extension
+    File.basename(path, extension) + '_' + SecureRandom.hex(6) + extension
   end
 end

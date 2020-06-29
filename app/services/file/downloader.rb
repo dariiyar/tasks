@@ -10,8 +10,7 @@ class File::Downloader
 
   def perform
     download_file
-    return OpenStruct.new(success?: true, file: @tempfile) if @error.nil?
-    OpenStruct.new(success?: false, error: @error)
+    @error.present? ? OpenStruct.new(success?: false, error: @error) : OpenStruct.new(success?: true, file: @tempfile)
   end
 
   private

@@ -1,0 +1,43 @@
+directories:
+  "app":
+    IrresponsibleModule:
+      enabled: false
+  "app/helpers":
+    FeatureEnvy:
+      enabled: false
+  "config":
+    TooManyStatements:
+      enabled: false
+    IrresponsibleModule:
+      enabled: false
+  "spec":
+    UtilityFunction:
+      enabled: false
+  "db/migrate":
+    FeatureEnvy:
+      enabled: false
+
+detectors:
+  Attribute:
+    enabled: false
+  TooManyStatements:
+    max_statements: 10
+  IrresponsibleModule:
+    enabled: false
+  UncommunicativeVariableName:
+    accept:
+      - e
+      - s3
+      - t
+  UncommunicativeMethodName:
+    exclude:
+      - 'ApplicationController#render_404'
+      - 'File::AwsS3Uploader#upload_to_s3'
+      - 'File::Downloader#download_file'
+  InstanceVariableAssumption:
+    exclude:
+      - 'File::Downloader'
+  FeatureEnvy:
+    exclude:
+      - 'Task::BatchCreate#save_tasks'
+

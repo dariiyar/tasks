@@ -12,8 +12,7 @@ class File::AwsS3Uploader
 
   def perform
     upload_to_s3
-    return OpenStruct.new(success?: true) if @error.nil?
-    OpenStruct.new(success?: false, error: @error)
+    @error.present? ? OpenStruct.new(success?: false, error: @error) : OpenStruct.new(success?: true)
   end
 
   private
