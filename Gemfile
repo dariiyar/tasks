@@ -4,6 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '2.6.5'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+
 gem 'rails', '~> 6.0.3', '>= 6.0.3.1'
 gem 'pg', '~> 1.2.3'
 # Use Puma as the app server
@@ -18,9 +19,12 @@ gem 'puma', '~> 4.1'
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
+gem 'sidekiq'
+
 gem 'rubocop'
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'reek'
+
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
@@ -34,12 +38,16 @@ gem 'aws-sdk', '~> 3'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'rspec-rails', '~> 4.0.0'
   gem 'pry'
   gem 'factory_bot_rails'
   gem 'ffaker'
-  gem 'database_cleaner'
   gem 'dotenv-rails'
+end
+
+group :test do
+  gem 'rspec-rails', '~> 4.0.0'
+  gem 'rspec-sidekiq'
+  gem 'database_cleaner'
 end
 
 group :development do
